@@ -46,6 +46,11 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
+app.get("/u/:id", (req, res) => {
+   const longURL = "http://www.lighthouselabs.ca"
+  res.redirect(longURL); //redirect to the longURL
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
