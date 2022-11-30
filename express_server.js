@@ -1,6 +1,8 @@
 const express = require ("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const cookieParser = require('cookie-parser')
+
 function generateRandomString() {} //generating a unique short URL (6 random characters) 
 
 
@@ -12,10 +14,12 @@ const urlDatabase = { //used to keep track of all the URLs and their shortened f
 }
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser()) //read documentation 
 
 app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
   res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  //??
 });
 
 app.get("/", (req, res) => {
@@ -42,7 +46,9 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  const templateVars = { id: req.params.id, longURL:  ("b2xVn2", "9sm5xK") /* What goes here? */ };
+  const id = req.params.id;
+  const longURL = urlDatabase[id]
+  const templateVars = {id, longURL}
   res.render("urls_show", templateVars);
 });
 
@@ -57,6 +63,26 @@ app.post("/urls/:id/delete", (req, res) => {
   delete urlDatabase[id]
   res.redirect("/urls")
 });
+
+// edit (never use get for edit)
+app.post("/urls/:id", (req, res) => {
+  const id = req.params.id
+  const longURL = req.body.longURL
+urlDatabase[id] = longURL
+  res.redirect("/urls") 
+  
+});
+
+
+app.post("/login", (req, res) => {
+  const id = req.params.id
+  const username = req.body.username
+  res.cookie('username', username)
+  res.redirect("/urls") 
+  
+});
+
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);

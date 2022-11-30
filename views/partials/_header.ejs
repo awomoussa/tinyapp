@@ -12,6 +12,20 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
+    <form class = "form-inline" method="POST" name ="LoginForm" action = "/login" style ="position: absolute; right:0">
+      <div class="form-group mb-2">
+        <label for="username">Username:</label>
+        <input 
+          class="form-control"
+          type="text"
+          name="username"
+          style="width: 300px; margin: 1em"
+        />
+      </div>
+      <button class = "btn btn-outline-dark"  type = "submit"> Login  </button>
+    </form>
+    
+
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
