@@ -54,7 +54,7 @@ app.get("/urls/:id", (req, res) => {
   const longURL = urlDatabase[id]
   const templateVars = {id, longURL, username:req.cookies["username"]}
   res.render("urls_show", templateVars);
-  
+  //short url ?
 });
 
 app.get("/u/:id", (req, res) => {
@@ -72,7 +72,7 @@ app.post("/urls/:id/delete", (req, res) => {
     username: req.cookies["username"],
     // ... any other vars
   };
-  res.render("/urls", templateVars);
+  res.redirect("/urls");
 });
 
 // edit (never use get for edit)
@@ -85,7 +85,7 @@ urlDatabase[id] = longURL
     username: req.cookies["username"],
     // ... any other vars
   };
-  res.render("/urls", templateVars);
+  res.redirect("/urls");
   
 });
 
@@ -95,12 +95,27 @@ app.post("/login", (req, res) => {
   const username = req.body.username
   res.cookie('username', username)
   res.redirect("/urls") 
+
 });
 
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username")
+  res.redirect("/urls");
+});
+
+//registration routes
+
+// app.get('')
+
+// app.post('/register', (req, res){
+//   console.log()
+// })
 
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
 
 

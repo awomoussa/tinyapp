@@ -12,7 +12,17 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <form class = "form-inline" method="POST" name ="LoginForm" action = "/login" style ="position: absolute; right:0">
+ 
+    <% if(username) {%> 
+      <div> 
+         <form class = "form-inline" action="/logout" method="POST" style ="position: absolute; right:0" >
+           <h5>Logged in as:<%= username %> </h5>
+         <button type="submit" class="btn btn-outline-dark">Logout</button>
+       </form>
+     </div>
+     <% } else { %>
+
+    <form class = "form-inline" method="POST" name ="LoginForm" action = "/login" style ="position: absolute; right:0" >
       <div class="form-group mb-2">
         <label for="username">Username:</label>
         <input 
@@ -24,7 +34,7 @@
       </div>
       <button class = "btn btn-outline-dark"  type = "submit"> Login  </button>
     </form>
-    
+    <% } %>
 
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
