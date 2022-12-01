@@ -90,7 +90,6 @@ app.post("/urls/:id/delete", (req, res) => {
   //res.redirect("/urls")
   const templateVars = {
     user: users[req.cookies.user_id],
-    // ... any other vars
   };
   res.redirect("/urls");
 });
@@ -100,10 +99,8 @@ app.post("/urls/:id", (req, res) => {
   const id = req.params.id
   const longURL = req.body.longURL
   urlDatabase[id] = longURL
-  //res.redirect("/urls") 
   const templateVars = {
     user: users[req.cookies.user_id],
-    // ... any other vars
   };
   res.redirect("/urls");
 
@@ -149,8 +146,6 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 
 });
-
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
