@@ -26,6 +26,15 @@ function generateRandomString() {
   return output;
 } //generating a unique short URL (6 random characters) 
 
+const getUserByEmail = function (email, users) {
+  let user;
+  for (const key in users) {
+    if (users[key].email === email) {
+      return users[key]
+    }
+  }
+  return null
+}
 
 app.set("view engine", "ejs");//tells the Express app to use EJS as its templating engine
 
@@ -41,9 +50,9 @@ app.use(cookieParser()) //read documentation
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   const longURL = req.body.longURL;
-  urlDatabase[shortURL] = longURL ;
+  urlDatabase[shortURL] = longURL;
   res.redirect(`urls/${shortURL}`);
-}); 
+});
 
 
 //routing to homepage
@@ -53,7 +62,7 @@ app.get("/", (req, res) => {
 
 
 
-app.get("/urls", (req, res) => { 
+app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase, user: users[req.cookies.user_id] };
   res.render("urls_index", templateVars);
 });
@@ -106,13 +115,34 @@ app.post("/urls/:id", (req, res) => {
 
 });
 
-//login 
+//login get
 
+
+app.get("/login", (req, res) => {
+  const templateVars = {
+    user: users[req.cookies.user_id],
+  };
+  res.render("login", templateVars);
+});
+
+//login post 
 app.post("/login", (req, res) => {
-  const id = req.params.id
-  const username = req.body.username
-  res.cookie('username', username)
-  res.redirect("/urls")
+  const email = req.body.email;
+  const password = req.body.password;
+  const user = getUserByEmail(email, users);
+  if (email === "") {
+    return res.status(400).send("Email cannot be empty");
+  } else if (password === "") {
+    return res.status(400).send("Password cannot be empty");
+  } else if (!user) {
+    return res.status(403).send("Email cannot be found")
+  }
+  //else if (user !== user.password) {
+  //   return res.status(403).send("Incorrect Password")
+  // }
+
+  res.cookie('user_id', user.id )
+  res.redirect("/urls");
 
 });
 
@@ -120,22 +150,36 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id")
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 //registration routes
 
 // register page
 app.get("/register", (req, res) => {
-  res.render("register");
+  const templateVars = {
+    user: users[req.cookies.user_id],
+  };
+  res.render("register", templateVars);
 });
 
 // register submit handler
 //This endpoint should add a new user object to the global users object. The user object should include the user's id, email and password, similar to the example above
 app.post("/register", (req, res) => {
   const id = generateRandomString(); //step 1 
-    const password = req.body.password;
+  const password = req.body.password;
   const email = req.body.email;
+  
+  if (email === "") {
+    return res.status(400).send("Email cannot be empty")
+  } else if (password === "") {
+    return res.status(400).send("Password cannot be empty")
+  }
+console.log(getUserByEmail(email, users));
+    if (getUserByEmail(email, users) !== null) {
+      return res.status(400).send("Email already exists")
+    }
+
   users[id] = {
     id: id,
     email: email,
@@ -146,6 +190,8 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
