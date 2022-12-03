@@ -21,8 +21,8 @@
  
     <% if(user) {%> 
       <div> 
-         <form class = "form-inline" action="/logout" method="POST" style ="position: absolute; right:0" >
-           <h5>Logged in as:<%= user.email %> </h5>
+         <form class = "form-inline" action="/logout" method="POST" style ="position: absolute; right:0; top: 10px" >
+           <h5>Logged in as:<%= user.email %> </h5> 
          <button type="submit" class="btn btn-outline-dark">Logout</button>
        </form>
      </div>
